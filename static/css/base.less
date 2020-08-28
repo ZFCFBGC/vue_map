@@ -1,0 +1,404 @@
+/*(1)清除默认样式*/
+html,
+body,
+div,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-weight: normal;
+  vertical-align: baseline;
+  font-size: 16px;
+}
+fieldset,
+img,
+input,
+button {
+  border: 0 none;
+  padding: 0;
+  margin: 0;
+  outline-style: none;
+} /*去掉input等聚焦时的蓝色边框*/
+ul,
+li,
+ol {
+  list-style: none;
+}
+select,
+input {
+  vertical-align: middle;
+}
+/*select, input, textarea { font-size:12px; margin:0; }*/
+textarea {
+  resize: none;
+} /*防止拖动*/
+img {
+  display: block;
+  border: 0;
+  /* vertical-align: middle; */
+}
+.export-arrow {
+  position: absolute;
+  right: 8px;
+  top: 30%;
+}
+/*  去掉图片底侧默认的3像素空白缝隙，或者用display：block也可以*/
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+a {
+  color: #7e8c8d;
+  text-decoration: none;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+::-webkit-scrollbar-track-piece {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:vertical {
+  height: 5px;
+  background-color: rgba(125, 125, 125, 0.7);
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:horizontal {
+  width: 5px;
+  background-color: rgba(125, 125, 125, 0.7);
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+}
+/*（2）添加公共样式*/
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", "微软雅黑",
+    sans-serif;
+}
+body {
+  line-height: 1;
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  position: relative;
+}
+html {
+  overflow-y: scroll;
+  position: relative;
+}
+.clearfix:after {
+  content: "";
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  clear: both;
+  zoom: 1;
+}
+
+/*公共类*/
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.ac {
+  text-align: center;
+}
+.hide {
+  display: none;
+}
+.f16 {
+  font-size: 16px;
+}
+/*隐藏*/
+/* div {
+  box-sizing: border-box;
+} */
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+input,
+textarea {
+  user-select: auto;
+}
+/* 对话弹窗公共样式 */
+@blue: #3370ff; //主体蓝色
+@title: rgba(24, 38, 60, 1); //标题颜色
+@content: #787878; //内容颜色
+
+//遮罩层
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 1);
+  opacity: 0.5;
+  z-index: 1000;
+  animation: change 0.5s;
+}
+@keyframes change {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+.pointer,
+.handle,
+.el-range-input {
+  cursor: pointer;
+}
+.el-select__caret.el-input__icon.el-icon-arrow-up {
+  line-height: 32px;
+  &::before {
+    content: "\e78f";
+    transform: rotateZ(180deg);
+  }
+}
+.el-tree-node__expand-icon{
+  font-size: 14px;
+  color:#73BAFF;
+  &.expanded{
+    transform: initial;
+    transition: initial;
+    &::before{
+      content: "\e7a2";
+    }
+  }
+}
+.swd-popper {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  padding: 10px 13px;
+}
+.el-icon-arrow-down:before {
+  content: "\E78f";
+}
+.rotate {
+  animation: rotate 1s linear infinite;
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.el-pagination {
+  .btn-prev,
+  .btn-next {
+    border: 1px solid rgba(222, 224, 227, 1);
+    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+    min-width: initial;
+    text-align: center;
+    padding: 0;
+  }
+  .el-pager {
+    .number {
+      background: rgba(255, 255, 255, 1);
+      border: 1px solid rgba(222, 224, 227, 1);
+      border-radius: 4px;
+      height: 28px;
+      min-width: 28px;
+      margin: 0 4px;
+      &.active {
+        border-color: #3370ff;
+      }
+    }
+  }
+}
+// el-tabl样式覆盖
+.el-table__header {
+  background-color: #fff;
+  border-bottom: 0;
+}
+.dialog {
+  position: relative;
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding: 26px 36px;
+  background: #fff;
+  z-index: 1001;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    .title {
+      font-size: 14px;
+      color: @title;
+    }
+    .close {
+      cursor: pointer;
+      color: #646a73;
+      font-size: 14px;
+      &:hover {
+        color: @blue;
+      }
+    }
+  }
+  .content {
+    .title {
+      font-size: 14px;
+      color: @title;
+    }
+  }
+  .btn-right {
+    text-align: right;
+    padding-top: 18px;
+    .el-button {
+      width: 78px;
+      height: 32px;
+      line-height: 32px;
+      vertical-align: middle;
+      padding: 0 25px;
+      text-align: center;
+      font-size: 13px;
+      border-radius: 3px;
+    }
+    .el-button--primary {
+      background-color: #3370ff;
+    }
+  }
+  .btn-center {
+    text-align: center;
+    padding-top: 18px;
+    .el-button {
+      width: 78px;
+      height: 32px;
+      line-height: 32px;
+      vertical-align: middle;
+      padding: 0 25px;
+      text-align: center;
+    }
+    .el-button--primary {
+      background-color: #3370ff;
+    }
+  }
+}
+.title-prefix {
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    background-color: #5086e9;
+    position: relative;
+    top: 3px;
+    margin-right: 7px;
+  }
+}
+//dropdown menu统一样式
+.el-dropdown-menu__item {
+  padding: 0 10px;
+  white-space: nowrap;
+}

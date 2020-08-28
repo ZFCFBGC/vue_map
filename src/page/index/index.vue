@@ -17,4 +17,10 @@ export default {
   methods: {}
 };
 </script>
-<style scoped lang="less"></style>
+<style scoped lang="less">
+  .index{
+    height:100%;
+    width:90%;
+    padding:0 5%;
+  }
+</style>
