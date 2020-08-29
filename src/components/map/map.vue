@@ -4,7 +4,7 @@
     <div class="title clearfix">
       <div class="title_l fl">显示定位信息</div>
       <div class="title_r fr">
-        <img src="@/assets/images/map.png" alt="切换地图" @click="toggleMap"/>
+        <img src="@/assets/images/map.png" alt="切换地图" @click="toggleMap" />
         <div class="mapSelect" v-if="isMapSelectShow">
           <div class="tabSelect" :class="active == 1?'active':''" @click="choseMap(1)">百度地图</div>
           <div class="tabSelect" :class="active == 2?'active':''" @click="choseMap(2)">谷歌地图</div>
@@ -22,16 +22,17 @@ export default {
     return {
       nowShowSatellite: false,
       maptalk: null, //地图主体对象
-      isMapSelectShow:false,
-      active:1,
+      layer: null, //地图图层
+      isMapSelectShow: false,
+      active: 1,
     };
   },
   mounted() {
-    this.showBaiduMap();
+    this.choseMap(1);
   },
   methods: {
     // 百度地图
-    showBaiduMap: function() {
+    showBaiduMap: function () {
       var that = this;
       that.$nextTick(() => {
         this.maptalk = new maptalks.Map("map", {
@@ -40,36 +41,36 @@ export default {
           zoomControl: {
             position: "top-left",
             slider: true,
-            zoomLevel: false
+            zoomLevel: false,
           },
           scaleControl: true,
           spatialReference: {
-            projection: "baidu"
+            projection: "baidu",
           },
           attribution: {
-            content: "&copy;百度地图"
+            content: "&copy;百度地图",
           },
           baseLayer: new maptalks.GroupTileLayer("地图", [
             new maptalks.TileLayer("百度地图", {
               visible: !this.nowShowSatellite,
               urlTemplate:
                 "http://online{s}.map.bdimg.com/onlinelabel/?qt=tile&x={x}&y={y}&z={z}&s=1&styles=pl&scaler=1&p=1&s=1",
-              subdomains: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+              subdomains: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
             }),
             new maptalks.TileLayer("百度卫星", {
               visible: this.nowShowSatellite,
               urlTemplate:
                 "https://ss{s}.bdstatic.com/8bo_dTSlR1gBo1vgoIiO_jowehsv/starpic/?qt=satepc&s=1&u=x={x};y={y};z={z};v=009;type=sate&fm=46&app=webearth2&v=009",
-              subdomains: ["0", "1", "2", "3"]
-            })
-          ])
+              subdomains: ["0", "1", "2", "3"],
+            }),
+          ]),
         });
         this.maptalk.setMinZoom(4); //限制最小缩放比例
         this.maptalk.setMaxZoom(20); //限制最大缩放比例
       });
     },
     // 谷歌地图
-    showGoogleMap: function(initLng, initLat) {
+    showGoogleMap: function (initLng, initLat) {
       var that = this;
       that.$nextTick(() => {
         this.maptalk = new maptalks.Map("map", {
@@ -78,33 +79,33 @@ export default {
           zoomControl: {
             position: "top-left",
             slider: true,
-            zoomLevel: false
+            zoomLevel: false,
           },
           scaleControl: true,
           attribution: {
-            content: "&copy;谷歌地图"
+            content: "&copy;谷歌地图",
           },
           baseLayer: new maptalks.GroupTileLayer("地图", [
             new maptalks.TileLayer("谷歌地图", {
               visible: !this.nowShowSatellite,
               urlTemplate:
                 "https://mt{s}.google.cn/vt/lyrs=m@207000000&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galile",
-              subdomains: ["0", "1", "2", "3"]
+              subdomains: ["0", "1", "2", "3"],
             }),
             new maptalks.TileLayer("谷歌卫星", {
               visible: this.nowShowSatellite,
               urlTemplate:
                 "https://mt{s}.google.cn/maps/vt?lyrs=s%40781&hl=zh-CN&gl=CN&x={x}&y={y}&z={z}",
-              subdomains: ["0", "1", "2", "3"]
-            })
-          ])
+              subdomains: ["0", "1", "2", "3"],
+            }),
+          ]),
         });
         this.maptalk.setMinZoom(4); //限制最小缩放比例
         this.maptalk.setMaxZoom(20); //限制最大缩放比例
       });
     },
     // 必应地图
-    showBingMap: function() {
+    showBingMap: function () {
       var that = this;
       that.$nextTick(() => {
         this.maptalk = new maptalks.Map("map", {
@@ -113,19 +114,19 @@ export default {
           zoomControl: {
             position: "top-left",
             slider: true,
-            zoomLevel: false
+            zoomLevel: false,
           },
           scaleControl: true,
           attribution: {
-            content: "&copy;必应地图"
+            content: "&copy;必应地图",
           },
           baseLayer: new maptalks.GroupTileLayer("地图", [
             new maptalks.TileLayer("必应电子地图", {
               visible: !this.nowShowSatellite,
               id: "bingBase",
-              urlTemplate: function(x, y, z, domain) {
+              urlTemplate: function (x, y, z, domain) {
                 //通过x,y,z计算quadkey和url
-                var quadKey = this.quadTreeChange(x, y, z);
+                var quadKey = that.quadTreeChange(x, y, z);
                 return (
                   "http://ecn.t" +
                   domain +
@@ -134,12 +135,12 @@ export default {
                   ".jpeg?g=7863&mkt=zh-CN&shading=hill"
                 );
               },
-              subdomains: ["0", "1", "2", "3"]
+              subdomains: ["0", "1", "2", "3"],
             }),
             new maptalks.TileLayer("必应卫星地图", {
               id: "bingSatellite",
               visible: this.nowShowSatellite,
-              urlTemplate: function(x, y, z, domain) {
+              urlTemplate: function (x, y, z, domain) {
                 //通过x,y,z计算quadkey和url
                 var quadKey = this.quadTreeChange(x, y, z);
                 return (
@@ -150,9 +151,9 @@ export default {
                   ".jpeg?g=7863"
                 );
               },
-              subdomains: ["0", "1", "2", "3"]
-            })
-          ])
+              subdomains: ["0", "1", "2", "3"],
+            }),
+          ]),
         });
         this.maptalk.setMinZoom(4); //限制最小缩放比例
         this.maptalk.setMaxZoom(20); //限制最大缩放比例
@@ -161,7 +162,7 @@ export default {
     //xyz转quadKeys算法
     //转换规则：10进制的参数x，y值要先转为2进制，再将y，x从右到左进行位数拼接，例如y=100,x=11,则补齐0后x=011，拼接为100101。
     //再把结果值转换为4进制。4进制的结果长度小于z值需要在前面补0
-    quadTreeChange: function(x, y, z) {
+    quadTreeChange: function (x, y, z) {
       var x2 = x.toString(2); //10进制转换为2进制
       var y2 = y.toString(2);
       var zeroMap = [
@@ -175,7 +176,7 @@ export default {
         "00000000",
         "000000000",
         "0000000000",
-        "00000000000"
+        "00000000000",
       ];
       // 位数不相等则在前面补齐0
       if (x2.length > y2.length) {
@@ -198,21 +199,39 @@ export default {
     },
 
     //显示地图切换
-    toggleMap(){
-      this.isMapSelectShow = !this.isMapSelectShow
+    toggleMap() {
+      this.isMapSelectShow = !this.isMapSelectShow;
     },
     // 切换地图
-    choseMap(type){
-      if(type == 1){
-        this.active = 1
-      }else if(type == 2){
-        this.active = 2
-      }else if(type == 3){
-        this.active = 2
+    choseMap(type) {
+      // 如果地图对象存在则清除
+      if (this.maptalk) {
+        this.maptalk.remove();
       }
-      this.isMapSelectShow = false
-    }
-  }
+      if (type == 1) {
+        this.active = 1;
+        this.showBaiduMap();
+      } else if (type == 2) {
+        this.active = 2;
+        this.showGoogleMap();
+      } else if (type == 3) {
+        this.active = 3;
+        this.showBingMap();
+      }
+      setTimeout(() => {
+        if (!this.layer) {
+          //没有图层则添加图层到底图
+          this.layer = new maptalks.VectorLayer("vector").addTo(this.maptalk);
+        } else {
+          //有图层则把图层添加进底图(底图切换)
+          this.maptalk.removeLayer(this.layer); //清除图层
+          this.layer = new maptalks.VectorLayer("vector").addTo(this.maptalk);
+        }
+      }, 500);
+
+      this.isMapSelectShow = false;
+    },
+  },
 };
 </script>
 
@@ -263,34 +282,34 @@ export default {
   z-index: 999;
   border: 1px solid #eee;
   border-radius: 5px;
-  .title_l{
-    margin-left:16px;
-    font-size:12px;
-    color:#666;
+  .title_l {
+    margin-left: 16px;
+    font-size: 12px;
+    color: #666;
     line-height: 28px;
   }
-  .title_r{
-    margin-right:24px;
-    margin-top:5px;
+  .title_r {
+    margin-right: 24px;
+    margin-top: 5px;
     position: relative;
   }
-  .mapSelect{
+  .mapSelect {
     position: absolute;
-    left:-42px;
-    top:20px;
-    width:80px;
-    background:#fff;
-    padding:6px 0;
+    left: -42px;
+    top: 20px;
+    width: 80px;
+    background: #fff;
+    padding: 6px 0;
     border: 1px solid #dedede;
-    font-size:12px;
-    color:#666;
-    .tabSelect{
-      font-size:12px;
-      color:#666;
-      line-height:24px;
+    font-size: 12px;
+    color: #666;
+    .tabSelect {
+      font-size: 12px;
+      color: #666;
+      line-height: 24px;
     }
-    .active{
-      color:#49a0ff;
+    .active {
+      color: #49a0ff;
     }
   }
 }
