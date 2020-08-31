@@ -46,6 +46,7 @@ export default {
         if(res.ret){
           if(res.data){
             this.$cookie.set("token", res.data.token);
+            this.$cookie.set("userId", res.data.userId);
             this.$router.push({ path: "/index" });
           }else{
             window.alert('未知错误，token不存在')

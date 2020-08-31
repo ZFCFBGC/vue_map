@@ -15,7 +15,7 @@ html,
 body {
   margin: 0px;
   height: 100%;
-  width: 100%;
+  width: 1910px;
   padding: 0px;
 }
 #app {
