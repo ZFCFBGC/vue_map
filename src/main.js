@@ -41,7 +41,9 @@ import {
   Tree,
   Form,
   Progress,
-  FormItem
+  FormItem,
+  Collapse,
+  CollapseItem
 } from "element-ui";
 
 
@@ -80,7 +82,9 @@ Vue.use(RadioGroup);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Progress);
-Vue.use( Dialog);
+Vue.use(Dialog);
+Vue.use(Collapse);
+Vue.use(CollapseItem);
 
 import "element-ui/lib/theme-chalk/index.css";
 

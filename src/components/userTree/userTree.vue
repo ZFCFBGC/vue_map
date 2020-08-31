@@ -5,6 +5,7 @@
         <i slot="suffix" class="el-input__icon el-icon-search"></i>
       </el-input>
     </div>
+    <div class="topPlacehodler"></div>
     <div class="userTree_c">
       <div v-if="clientArr.length > 0" class="treeInfo">
         <el-tree
@@ -57,7 +58,7 @@ export default {
     getUserInfo(node, resolve) {
       var url = "/structure/getChildStruc.do";
       this.$client.post(url).then(res => {
-        console.log("节点数据：", res);
+        // console.log("节点数据：", res);
         if (res.ret) {
           var obj = res.data[0];
           this.id = obj.userId;
@@ -69,13 +70,12 @@ export default {
     getExpand() {},
     getColse() {},
     getNode(item) {
-      this.$emit("getNode", {
-        multipleSelection: item
-      });
+      console.log('节点点击',item)
+      this.$emit("getNode", item);
     },
     loadNode(node, resolve) {
       var that = this;
-      console.log("懒加载：", node, this.clientArr);
+      // console.log("懒加载：", node, this.clientArr);
       if (node.level === 0) {
         return resolve(this.clientArr);
       }
@@ -90,7 +90,7 @@ export default {
           targetUserId: node.data.userId
         })
         .then(res => {
-          console.log("11111:", res);
+          // console.log("11111:", res);
           if (res.ret) {
             var arr = res.data;
             arr.map(item => {
@@ -109,11 +109,19 @@ export default {
 .userTree {
   height: 100%;
   width: 100%;
+  position: relative;
   .search{
     width:287px;
+    // position: absolute;
+    // left:0;
+    // top:0;
   }
+  // .topPlacehodler{
+  //   height:30px;
+  // }
   .userTree_c {
     height: 100%;
+    box-sizing: border-box;
     width: 100%;
     /deep/.treeInfo {
       height: 100%;
