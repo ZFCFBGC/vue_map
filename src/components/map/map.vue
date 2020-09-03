@@ -6,9 +6,27 @@
       <div class="title_r fr">
         <img src="@/assets/images/map.png" alt="切换地图" @click="toggleMap" />
         <div class="mapSelect" v-if="isMapSelectShow">
-          <div class="tabSelect" :class="active == 1?'active':''" @click="choseMap(1)">百度地图</div>
-          <div class="tabSelect" :class="active == 2?'active':''" @click="choseMap(2)">谷歌地图</div>
-          <div class="tabSelect" :class="active == 3?'active':''" @click="choseMap(3)">必应地图</div>
+          <div
+            class="tabSelect"
+            :class="active == 1 ? 'active' : ''"
+            @click="choseMap(1)"
+          >
+            百度地图
+          </div>
+          <div
+            class="tabSelect"
+            :class="active == 2 ? 'active' : ''"
+            @click="choseMap(2)"
+          >
+            谷歌地图
+          </div>
+          <div
+            class="tabSelect"
+            :class="active == 3 ? 'active' : ''"
+            @click="choseMap(3)"
+          >
+            必应地图
+          </div>
         </div>
       </div>
     </div>
@@ -25,6 +43,7 @@ export default {
       layer: null, //地图图层
       isMapSelectShow: false,
       active: 1,
+      carMarkerArr:[]
     };
   },
   mounted() {
@@ -32,7 +51,7 @@ export default {
   },
   methods: {
     // 百度地图
-    showBaiduMap: function () {
+    showBaiduMap: function() {
       var that = this;
       that.$nextTick(() => {
         this.maptalk = new maptalks.Map("map", {
@@ -41,36 +60,36 @@ export default {
           zoomControl: {
             position: "top-left",
             slider: true,
-            zoomLevel: false,
+            zoomLevel: false
           },
           scaleControl: true,
           spatialReference: {
-            projection: "baidu",
+            projection: "baidu"
           },
           attribution: {
-            content: "&copy;百度地图",
+            content: "&copy;百度地图"
           },
           baseLayer: new maptalks.GroupTileLayer("地图", [
             new maptalks.TileLayer("百度地图", {
               visible: !this.nowShowSatellite,
               urlTemplate:
                 "http://online{s}.map.bdimg.com/onlinelabel/?qt=tile&x={x}&y={y}&z={z}&s=1&styles=pl&scaler=1&p=1&s=1",
-              subdomains: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+              subdomains: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
             }),
             new maptalks.TileLayer("百度卫星", {
               visible: this.nowShowSatellite,
               urlTemplate:
                 "https://ss{s}.bdstatic.com/8bo_dTSlR1gBo1vgoIiO_jowehsv/starpic/?qt=satepc&s=1&u=x={x};y={y};z={z};v=009;type=sate&fm=46&app=webearth2&v=009",
-              subdomains: ["0", "1", "2", "3"],
-            }),
-          ]),
+              subdomains: ["0", "1", "2", "3"]
+            })
+          ])
         });
         this.maptalk.setMinZoom(4); //限制最小缩放比例
         this.maptalk.setMaxZoom(20); //限制最大缩放比例
       });
     },
     // 谷歌地图
-    showGoogleMap: function (initLng, initLat) {
+    showGoogleMap: function(initLng, initLat) {
       var that = this;
       that.$nextTick(() => {
         this.maptalk = new maptalks.Map("map", {
@@ -79,33 +98,33 @@ export default {
           zoomControl: {
             position: "top-left",
             slider: true,
-            zoomLevel: false,
+            zoomLevel: false
           },
           scaleControl: true,
           attribution: {
-            content: "&copy;谷歌地图",
+            content: "&copy;谷歌地图"
           },
           baseLayer: new maptalks.GroupTileLayer("地图", [
             new maptalks.TileLayer("谷歌地图", {
               visible: !this.nowShowSatellite,
               urlTemplate:
                 "https://mt{s}.google.cn/vt/lyrs=m@207000000&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galile",
-              subdomains: ["0", "1", "2", "3"],
+              subdomains: ["0", "1", "2", "3"]
             }),
             new maptalks.TileLayer("谷歌卫星", {
               visible: this.nowShowSatellite,
               urlTemplate:
                 "https://mt{s}.google.cn/maps/vt?lyrs=s%40781&hl=zh-CN&gl=CN&x={x}&y={y}&z={z}",
-              subdomains: ["0", "1", "2", "3"],
-            }),
-          ]),
+              subdomains: ["0", "1", "2", "3"]
+            })
+          ])
         });
         this.maptalk.setMinZoom(4); //限制最小缩放比例
         this.maptalk.setMaxZoom(20); //限制最大缩放比例
       });
     },
     // 必应地图
-    showBingMap: function () {
+    showBingMap: function() {
       var that = this;
       that.$nextTick(() => {
         this.maptalk = new maptalks.Map("map", {
@@ -114,17 +133,17 @@ export default {
           zoomControl: {
             position: "top-left",
             slider: true,
-            zoomLevel: false,
+            zoomLevel: false
           },
           scaleControl: true,
           attribution: {
-            content: "&copy;必应地图",
+            content: "&copy;必应地图"
           },
           baseLayer: new maptalks.GroupTileLayer("地图", [
             new maptalks.TileLayer("必应电子地图", {
               visible: !this.nowShowSatellite,
               id: "bingBase",
-              urlTemplate: function (x, y, z, domain) {
+              urlTemplate: function(x, y, z, domain) {
                 //通过x,y,z计算quadkey和url
                 var quadKey = that.quadTreeChange(x, y, z);
                 return (
@@ -135,12 +154,12 @@ export default {
                   ".jpeg?g=7863&mkt=zh-CN&shading=hill"
                 );
               },
-              subdomains: ["0", "1", "2", "3"],
+              subdomains: ["0", "1", "2", "3"]
             }),
             new maptalks.TileLayer("必应卫星地图", {
               id: "bingSatellite",
               visible: this.nowShowSatellite,
-              urlTemplate: function (x, y, z, domain) {
+              urlTemplate: function(x, y, z, domain) {
                 //通过x,y,z计算quadkey和url
                 var quadKey = this.quadTreeChange(x, y, z);
                 return (
@@ -151,9 +170,9 @@ export default {
                   ".jpeg?g=7863"
                 );
               },
-              subdomains: ["0", "1", "2", "3"],
-            }),
-          ]),
+              subdomains: ["0", "1", "2", "3"]
+            })
+          ])
         });
         this.maptalk.setMinZoom(4); //限制最小缩放比例
         this.maptalk.setMaxZoom(20); //限制最大缩放比例
@@ -162,7 +181,7 @@ export default {
     //xyz转quadKeys算法
     //转换规则：10进制的参数x，y值要先转为2进制，再将y，x从右到左进行位数拼接，例如y=100,x=11,则补齐0后x=011，拼接为100101。
     //再把结果值转换为4进制。4进制的结果长度小于z值需要在前面补0
-    quadTreeChange: function (x, y, z) {
+    quadTreeChange: function(x, y, z) {
       var x2 = x.toString(2); //10进制转换为2进制
       var y2 = y.toString(2);
       var zeroMap = [
@@ -176,7 +195,7 @@ export default {
         "00000000",
         "000000000",
         "0000000000",
-        "00000000000",
+        "00000000000"
       ];
       // 位数不相等则在前面补齐0
       if (x2.length > y2.length) {
@@ -231,7 +250,111 @@ export default {
 
       this.isMapSelectShow = false;
     },
-  },
+    // 显示车辆设备
+    showCar(carArr){
+      var that = this;
+      if(carArr){
+        carArr.map(item=>{
+          if(item.carStatus.lon==0){
+            console.log("没有定位数据")
+          }else{
+             that.car_marker(item.carStatus,false);
+          }
+          return;
+        })
+      }else{
+        return;
+      }
+    },
+    // 创建车辆图标
+    //../images/map/machine/3/blue_315.png
+    car_marker: function(opt, carStatus) {
+      var that = this;
+      var point = new maptalks.Marker([opt.lon, opt.lat], {
+        visible: true,
+        editable: true,
+        cursor: "pointer",
+        shadowBlur: 0,
+        shadowColor: "black",
+        draggable: false,
+        dragShadow: false, // display a shadow during dragging
+        drawOnAxis: null, // force dragging stick on a axis, can be: x, y
+        symbol: {
+          markerFile: "../../static/images/machine/1/blue.png",
+          markerDx: 0,
+          markerDy: 16
+        }
+      });
+      var label = new maptalks.Label("label without box", [opt.lon, opt.lat], {
+        draggable: true,
+        textSymbol: {
+          textFaceName: "monospace",
+          textFill: "#34495e",
+          textHaloFill: "#fff",
+          textHaloRadius: 4,
+          textSize: 18,
+          textWeight: "bold",
+          textVerticalAlignment: "top"
+        }
+      });
+      point.setInfoWindow({
+        content: "各个车辆信息",
+        single: false,
+        autoPan: false,
+        custom: true,
+        dx: 0,
+        dy: -8
+      });
+      setTimeout(function() {
+        point.addTo(that.layer)
+        if(carStatus == true){
+          point.openInfoWindow()
+        }
+      }, 500);
+      this.carMarkerArr.push(point);
+      return point;
+    },
+    // 更新车辆图标位置
+    refresh_carMarker: function(marker, opt) {
+      var that = this;
+      if (marker) {
+        if (opt.lon && opt.lat) {
+          marker.setCoordinates({
+            x: opt.lon,
+            y: opt.lat
+          });
+        }
+        if (opt.icon) {
+          marker.setSymbol({
+            markerFile: opt.icon,
+            markerDx: 0,
+            markerDy: 16
+          });
+        }
+      }
+    },
+    // 锁定视窗
+    lockWindowByLngLat: function(lng, lat) {
+      var boolean = this.isGetBounds(lng, lat);
+      if (!boolean) {
+        this.maptalk.setCenter([lng, lat]);
+      }
+    },
+    // 判断坐标点是否在地图可视范围内
+    isGetBounds: function(lon, lat) {
+      var view = this.maptalk.getExtent(); //获取当前地图的显示范围
+      if (
+        lon > view.xmin &&
+        lon < view.xmax &&
+        lat > view.ymin &&
+        lat < view.ymax
+      ) {
+        return true; //在范围内
+      } else {
+        return false; ////在范围外
+      }
+    }
+  }
 };
 </script>
 

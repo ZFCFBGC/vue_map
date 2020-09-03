@@ -75,7 +75,6 @@ export default {
     },
     loadNode(node, resolve) {
       var that = this;
-      // console.log("懒加载：", node, this.clientArr);
       if (node.level === 0) {
         return resolve(this.clientArr);
       }

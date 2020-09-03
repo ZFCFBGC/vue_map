@@ -9,28 +9,32 @@
         <div class="device">
           <el-collapse v-model="activeNames" @change="handleChange" accordion>
             <el-collapse-item
-              v-for="item in  deviceArr"
+              v-for="item in deviceArr"
               :name="item.carGroupId"
               :key="item.carGroupId"
             >
               <template slot="title">
-                {{item.name?item.name:'默认分组'}}
-                <span>&nbsp;&nbsp;(&nbsp;{{item.allCount}}&nbsp;)</span>
+                {{ item.name ? item.name : "默认分组" }}
+                <span>&nbsp;&nbsp;(&nbsp;{{ item.allCount }}&nbsp;)</span>
               </template>
               <div v-if="item.cars" class="allDevice">
                 <div v-for="car in item.cars" class="machineName">
                   <!-- 未激活 -->
                   <div class="unused" v-if="!car.activeTime">
-                    <span>{{car.machineName}}</span>
+                    <span>{{ car.machineName }}</span>
                   </div>
                   <!-- 欠费 -->
-                  <div class="arrears" v-else-if="car.serviceState>0">
-                    <span>{{car.machineName}}</span>
+                  <div class="arrears" v-else-if="car.serviceState > 0">
+                    <span>{{ car.machineName }}</span>
                   </div>
                   <div class="activation" v-else-if="car.carStatus">
-                    <span :class="car.carStatus.online?'onlineStatus':'offlineStatus'">{{car.machineName}}</span>
+                    <span
+                      :class="
+                        car.carStatus.online ? 'onlineStatus' : 'offlineStatus'
+                      "
+                      >{{ car.machineName }}</span
+                    >
                   </div>
-                  
                 </div>
               </div>
             </el-collapse-item>
@@ -38,7 +42,7 @@
         </div>
       </div>
       <div class="mapContainer fr">
-        <gqg-map></gqg-map>
+        <gqg-map ref="myMap"></gqg-map>
       </div>
     </div>
   </div>
@@ -49,13 +53,14 @@ import userTree from "@/components/userTree/userTree.vue";
 export default {
   components: {
     gqgMap,
-    userTree,
+    userTree
   },
   data() {
     return {
       activeNames: [0],
       deviceArr: [],
-      targetUserId:null
+      targetUserId: null,
+      carInfoArr: []
     };
   },
   created() {
@@ -64,18 +69,31 @@ export default {
   mounted() {},
   methods: {
     getDevice(groupId) {
+      var that = this;
       var url = "/structure/getCarGroupAndStatus.do";
-      var targetUserId = this.targetUserId?this.targetUserId:this.$cookie.get("userId")
+      var targetUserId = this.targetUserId
+        ? this.targetUserId
+        : this.$cookie.get("userId");
       var param = {
         targetUserId: targetUserId,
         groupId: groupId,
-        mapType: 1,
+        mapType: 1
       };
-      this.$client.post(url, param).then((res) => {
-        console.log("获取设备分组", res);
+      this.$client.post(url, param).then(res => {
         if (res.ret) {
           this.deviceArr = res.data;
-          console.log("处理后：", this.deviceArr);
+          //处理数据，去除未激活和欠费设备
+          this.deviceArr.map(item => {
+            if (item.cars) {
+              item.cars.map(info => {
+                if (info.activeTime && info.serviceState <= 0) {
+                  that.carInfoArr.push(info);
+                }
+              });
+            }
+            return;
+          });
+          this.$refs.myMap.showCar(that.carInfoArr);
         } else {
           window.alert("网络错误，请刷新");
         }
@@ -90,12 +108,12 @@ export default {
         console.log("关闭折叠面板");
       }
     },
-    getNode(info){
-      console.log('信息',info)
+    getNode(info) {
+      console.log("信息", info);
       this.targetUserId = info.userId;
-      this.getDevice(0)
+      this.getDevice(0);
     }
-  },
+  }
 };
 </script>
 <style scoped lang="less">
@@ -141,7 +159,7 @@ export default {
           border-bottom-color: #ebeef5;
         }
         .el-collapse-item__content {
-          padding-bottom:0px;
+          padding-bottom: 0px;
         }
         .allDevice {
           max-height: 400px;
@@ -153,21 +171,21 @@ export default {
           margin-left: 10px;
           color: #333;
           font-size: 12px;
-          .unused{
+          .unused {
             font-size: 12px;
-            color:#505050;
+            color: #505050;
           }
-          .arrears{
+          .arrears {
             font-size: 12px;
-            color:#505050;
+            color: #505050;
           }
-          .activation{
+          .activation {
             font-size: 12px;
-            .onlineStatus{
-              color:#007bee;
+            .onlineStatus {
+              color: #007bee;
             }
-            .offlineStatus{
-              color:#505050;
+            .offlineStatus {
+              color: #505050;
             }
           }
         }
