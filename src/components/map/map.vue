@@ -43,7 +43,7 @@ export default {
       layer: null, //地图图层
       isMapSelectShow: false,
       active: 1,
-      carMarkerArr:[]
+      carMarkerArr: []
     };
   },
   mounted() {
@@ -250,25 +250,48 @@ export default {
 
       this.isMapSelectShow = false;
     },
-    // 显示车辆设备
-    showCar(carArr){
+    /**
+     *  @method showCar 显示车辆方法
+     *  @param car {Object} 当前设备的状态信息
+     *  @param isOpenInfo {Bolean} 是否显示信息窗
+     *  @param showLine {Bolean} 是否显示信息窗轨迹
+     *  @param isSelectFromMonitor {Bolean} 是否从监控列表点击显示坐标信息
+     *  @param isRefresh {Bolean} 是否每十秒刷新状态模式
+     *  @param isCancelCheckLoc {Bolean} 是否取消判断坐标在中国 true->取消 false->不取消
+     */
+    showCar1:function(car,isOpenInfo,showLine,isSelectFromMonitor,isRefresh,isCancelCheckLoc){
+
+    },
+    showCar(carArr) {
       var that = this;
-      if(carArr){
-        carArr.map(item=>{
-          if(item.carStatus.lon==0){
-            console.log("没有定位数据")
-          }else{
-             that.car_marker(item.carStatus,false);
+      if (carArr) {
+        var carInfo = carArr[0].carStatus;
+        console.log("2222222：", carInfo);
+        that.maptalk.setCenter([carInfo.lon, carInfo.lat]);
+        that.maptalk.setZoom(17);
+        carArr.map(item => {
+          if (item.carStatus.lon == 0) {
+            // console.log("没有定位数据");
+          } else {
+            if (item.carStatus.online) {
+              item.carStatus.icon =
+                "../../static/images/machine/" + item.carType + "/green_0.png";
+            } else {
+              item.carStatus.icon =
+                "../../static/images/machine/" + item.carType + "/white_0.png";
+            }
+            that.car_marker(item.carStatus, false);
           }
           return;
-        })
-      }else{
+        });
+      } else {
         return;
       }
     },
     // 创建车辆图标
     //../images/map/machine/3/blue_315.png
     car_marker: function(opt, carStatus) {
+      // console.log('执行好了吗')
       var that = this;
       var point = new maptalks.Marker([opt.lon, opt.lat], {
         visible: true,
@@ -280,7 +303,7 @@ export default {
         dragShadow: false, // display a shadow during dragging
         drawOnAxis: null, // force dragging stick on a axis, can be: x, y
         symbol: {
-          markerFile: "../../static/images/machine/1/blue.png",
+          markerFile: opt.icon,
           markerDx: 0,
           markerDy: 16
         }
@@ -297,19 +320,19 @@ export default {
           textVerticalAlignment: "top"
         }
       });
-      point.setInfoWindow({
-        content: "各个车辆信息",
-        single: false,
-        autoPan: false,
-        custom: true,
-        dx: 0,
-        dy: -8
-      });
+      // point.setInfoWindow({
+      //   content: `<div class="map_machineNameBox">22222222222222222222</div>`,
+      //   single: false,
+      //   autoPan: false,
+      //   custom: true,
+      //   dx: 0,
+      //   dy: -8
+      // });
       setTimeout(function() {
-        point.addTo(that.layer)
-        if(carStatus == true){
-          point.openInfoWindow()
-        }
+        point.addTo(that.layer);
+        // if (carStatus == true) {
+        //   point.openInfoWindow();
+        // }
       }, 500);
       this.carMarkerArr.push(point);
       return point;
@@ -353,7 +376,16 @@ export default {
       } else {
         return false; ////在范围外
       }
-    }
+    },
+    // 移除所有车辆图标
+    clearAllCarMarker: function() {
+      for (var i = 0; i < this.carMarkerArr.length; i++) {
+        this.carMarkerArr[i].remove();
+      }
+      this.carMarkerArr = [];
+      console.log("执行了吗");
+    },
+    showCarInfoBox(marker, car, pos) {}
   }
 };
 </script>
@@ -367,6 +399,16 @@ export default {
 /deep/.container {
   width: 100%;
   height: 100%;
+  .map_machineNameBox {
+    background: red;
+    padding: 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+    border: 1px solid #dfdfdf;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    width: 100px;
+    height: 100px;
+  }
   .maptalks-zoom {
     border: 1px solid rgba(221, 221, 221, 1);
     margin-top: 32px;
@@ -394,6 +436,7 @@ export default {
     }
   }
 }
+
 .title {
   position: absolute;
   left: 0;
