@@ -87,7 +87,7 @@ Vue.use(Collapse);
 Vue.use(CollapseItem);
 
 import "element-ui/lib/theme-chalk/index.css";
-
+// import "vditor/src/assets/scss/index.scss"
 /* 初始化CSS, 公共类样式*/
 import "@/assets/css/base.css";
 

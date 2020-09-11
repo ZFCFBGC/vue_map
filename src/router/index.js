@@ -9,7 +9,7 @@ Router.prototype.push = function push(location, onResolve, onReject) {
 
 const index = ()=>import("@/page/index/index.vue")
 const login = ()=>import("@/page/login/login.vue")
-
+const richText = ()=>import("@/page/richText/richText.vue")
 Vue.use(Router)
 
 const router = new Router({
@@ -26,6 +26,14 @@ const router = new Router({
       path: '/index',
       name: 'Index',
       component: index,
+      meta:{
+        title:'物联网卡'
+      },
+    },
+    {
+      path: '/richText',
+      name: 'RichText',
+      component: richText,
       meta:{
         title:'物联网卡'
       },
